@@ -1,40 +1,42 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { RNCamera } from "react-native-camera";
-import ImagePicker from "react-native-image-picker";
+import * as ImagePicker from "expo-image-picker";
 
 const CameraPage = () => {
-  const [camera, setCamera] = useState(null);
-
   const takePicture = async () => {
-    if (camera) {
-      const options = { quality: 0.5, base64: true };
-      const data = await camera.takePictureAsync(options);
-      // data.uri contains the image path
-      console.log(data.uri);
-    }
-  };
-
-  const uploadPhoto = () => {
     const options = {
-      title: "Select Photo",
-      storageOptions: {
-        skipBackup: true,
-        path: "images",
-      },
+      saveToPhotos: true,
+      mediaType: "photo",
     };
 
-    ImagePicker.showImagePicker(options, (response) => {
+    launchCamera(options, (response) => {
       if (response.didCancel) {
-        console.log("User cancelled image picker");
+        console.log("User cancelled camera");
       } else if (response.error) {
-        console.log("ImagePicker Error: ", response.error);
+        console.log("launchCamera Error: ", response.error);
       } else {
-        const source = { uri: response.uri };
-        // You can now use this image source for your upload functionality
+        const source = { uri: response.assets[0].uri };
         console.log(source);
       }
     });
+  };
+
+  const uploadPhoto = async (useLibrary) => {
+    let result;
+    if (useLibrary) {
+      result = await ImagePicker.launchImageLibraryAsync({
+        mediaType: ImagePicker.MediaTypeOptions.Images,
+      });
+    } else {
+      await ImagePicker.requestCameraPermissionsAsync();
+      result = await ImagePicker.launchCameraAsync({
+        mediaType: ImagePicker.MediaTypeOptions.Images,
+      });
+    }
+    if (!result.canceled) {
+      console.log("not working");
+    }
   };
 
   return (
@@ -42,9 +44,6 @@ const CameraPage = () => {
       <Text style={styles.title}>Camera Page</Text>
       <RNCamera
         style={styles.preview}
-        ref={(ref) => {
-          setCamera(ref);
-        }}
         type={RNCamera.Constants.Type.back}
         flashMode={RNCamera.Constants.FlashMode.on}
       />

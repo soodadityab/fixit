@@ -1,7 +1,13 @@
 import React from "react";
-import { View, Text } from "react-native";
 import Home from "../components/home";
+import { View } from "react-native";
+import TitleBar from "../components/titlebar";
 
 export default function HomePage({ navigation }) {
-  return <Home navigation={navigation} />;
+  return (
+    <View>
+      <TitleBar />
+      <Home navigation={navigation} />
+    </View>
+  );
 }

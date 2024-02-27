@@ -11,7 +11,6 @@ export default function Profile() {
     picturesSubmitted: "10",
     upvotes: "5",
     fixed: "2",
-    // earned
   };
   console.log("Rendering Profile component", profile_example);
 
@@ -24,9 +23,9 @@ export default function Profile() {
 }
 const styles = StyleSheet.create({
   container: {
-    flex: 1, // This ensures the View takes up the full available space
-    justifyContent: "center", // Centers children vertically in the container
-    alignItems: "center", // Centers children horizontally in the container
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   text: {
     marginTop: 20, // Adds space between the ProfilePage and the Text component
